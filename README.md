@@ -21,6 +21,22 @@ The **Email Service API** is a robust and scalable application designed to handl
 - **React.js**: For managing a user-friendly dashboard to monitor email activities.
 - **Tailwind CSS**: For responsive and sleek UI design.
 
+## Screenshots
+
+Below are screenshots showcasing the application:
+
+1. **Home Page**  
+   ![Home Page](https://i.ibb.co/HK9PsSm/screencapture-email-service-api-psi-vercel-app-Home-2025-01-24-22-54-10.png)
+
+2. **Login**  
+   ![Login](https://i.ibb.co/2Pw46j4/image.png)
+
+3. **UserPage**  
+   ![UserPage](https://i.ibb.co/MD6VyNs/image.png)
+
+4. **AdminPage**  
+   ![AdminPage](https://i.ibb.co/NjYGSB6/image.png)
+
 ## Installation and Setup
 
 ### Prerequisites

@@ -8,13 +8,15 @@ import {
   Lock, 
   UserPlus, 
   LogIn, 
-  ShieldCheck 
+  ShieldCheck,
+  Loader2 
 } from 'lucide-react';
 
 const Auth = () => {
   const navigate = useNavigate();
   const [isRegistration, setIsRegistration] = useState(false);
   const [isVerification, setIsVerification] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,6 +29,9 @@ const Auth = () => {
 
   const handleRegistration = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+    
+    setIsLoading(true);
     try {
       const response = await axios.post('https://emailservice-app-backend-1.onrender.com/register', {
         email: formData.email,
@@ -36,11 +41,16 @@ const Auth = () => {
       setIsVerification(true);
     } catch (error) {
       toast.error(error.response?.data?.error || "Registration failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerification = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await axios.post('https://emailservice-app-backend-1.onrender.com/verify', {
         email: formData.email,
@@ -51,11 +61,16 @@ const Auth = () => {
       setIsRegistration(false);
     } catch (error) {
       toast.error(error.response?.data?.error || "Verification failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await axios.post('https://emailservice-app-backend-1.onrender.com/login', {
         email: formData.email,
@@ -72,6 +87,8 @@ const Auth = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,14 +117,24 @@ const Auth = () => {
                 className="pl-10 w-full p-3 bg-gray-700 border-gray-600 text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Enter verification code"
                 required
+                disabled={isLoading}
               />
             </div>
           </div>
           <button
             type="submit"
-            className="w-full flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ShieldCheck className="mr-2" /> Verify Email
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 animate-spin" /> Verifying...
+              </>
+            ) : (
+              <>
+                <ShieldCheck className="mr-2" /> Verify Email
+              </>
+            )}
           </button>
         </form>
       );
@@ -136,6 +163,7 @@ const Auth = () => {
               className="pl-10 w-full p-3 bg-gray-700 border-gray-600 text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="name@company.com"
               required
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -157,14 +185,21 @@ const Auth = () => {
               className="pl-10 w-full p-3 bg-gray-700 border-gray-600 text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="••••••••"
               required
+              disabled={isLoading}
             />
           </div>
         </div>
         <button
           type="submit"
-          className="w-full flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+          disabled={isLoading}
+          className="w-full flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isRegistration ? (
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 animate-spin" /> 
+              {isRegistration ? "Creating Account..." : "Signing In..."}
+            </>
+          ) : isRegistration ? (
             <>
               <UserPlus className="mr-2" /> Create Account
             </>
@@ -181,7 +216,8 @@ const Auth = () => {
           <button
             type="button"
             onClick={() => setIsRegistration(!isRegistration)}
-            className="text-indigo-400 hover:text-indigo-300 hover:underline transition-colors"
+            disabled={isLoading}
+            className="text-indigo-400 hover:text-indigo-300 hover:underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isRegistration ? "Sign in" : "Create account"}
           </button>
